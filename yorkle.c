@@ -64,8 +64,17 @@ int load_valid_words(valid_word_list_t *valid_words) {
    zero if an error happened while attempting to read the file.
  */
 int load_todays_answer(char answer[]) {
+	char word[WORD_SIZE + 1];
+	FILE *fh = fopen(TODAYS_ANSWER_FILENAME, "r");
+	if (fh == NULL) return 0; // file out found error
 
-  // YOUR CODE HERE
+	fscanf(fh, "%s", &word);
+	for (int i = 0; i < strlen(word); i++) answer[i] = word[i];
+	answer[strlen(word)] = '\0';
+
+	fclose(fh);
+
+	return 1;
 }
 
 /**
