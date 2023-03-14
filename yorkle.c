@@ -86,8 +86,23 @@ int load_todays_answer(char answer[]) {
    @param stats struct where player stats are to be loaded to.
  */
 void load_stats(player_stats_t *stats) {
-  
-  // YOUR CODE HERE
+	int value;
+	FILE *fh = fopen(STATS_FILENAME, "r");
+
+	if (fh == NULL) {
+		for (int i = 0; i < MAX_NUM_ATTEMPTS; i++) stats->wins_per_num_attempts[i] = 0;
+		stats->num_missed_words = 0;
+	} else {
+		printf("I shouldn't be running!");
+		for (int i = 0; i < MAX_NUM_ATTEMPTS; i++) {
+			fscanf(fh, "%d", &value);
+			stats->wins_per_num_attempts[i] = value != EOF ? value : 0;
+		}
+		fscanf(fh, "%d", &value);
+		stats->num_missed_words = value != EOF ? value : 0;
+
+		fclose(fh);
+	}
 }
 
 /**
