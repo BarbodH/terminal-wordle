@@ -130,8 +130,31 @@ void load_stats(player_stats_t *stats) {
    (e.g., EOF).
  */
 int read_attempt(unsigned int num_attempt, char attempt[]) {
+	printf("Attempt #%d: ", num_attempt);
 
-  // YOUR CODE HERE
+	char current_char;
+	int numCharsRead = 0;
+
+	for (;;) {
+		current_char = getchar();
+		if (current_char == EOF) return 0; // error in reading attempt
+		else if (!isspace(current_char)) {
+			current_char = tolower(current_char);
+			attempt[0] = current_char;
+			break;
+		}
+	}
+
+	int i;
+	for (i = 1; i < WORD_SIZE; i++) {
+		current_char = getchar();
+		if (isspace(current_char)) break;
+		current_char = tolower(current_char);
+		attempt[i] = current_char;
+	}
+	attempt[i] = '\0';
+
+	return 1;
 }
 
 /**
