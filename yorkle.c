@@ -30,8 +30,26 @@
    zero if an error happened while attempting to read the file.
 */
 int load_valid_words(valid_word_list_t *valid_words) {
+	FILE *fh;
+	char word[WORD_SIZE + 1];
+	int word_count = 0;
 
-  // YOUR CODE HERE
+	fh = fopen(WORD_LIST_FILENAME, "r");
+	if (fh == NULL) return 0; // file out found error
+
+	while (fscanf(fh, "%s", &word) != EOF) {
+		if (word_count >= MAX_VALID_WORDS) break;
+		for (int i = 0; i < strlen(word); i++) {
+			valid_words->words[word_count][i] = word[i];
+		}
+		valid_words->words[word_count][strlen(word)] = '\0';
+		word_count++;
+	}
+	valid_words->num_words = word_count;
+	
+	fclose(fh);
+
+	return 1;
 }
 
 /**

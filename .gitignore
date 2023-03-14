@@ -4,3 +4,5 @@
 *.out
 *.o
 yorkle
+output
+tester.c
