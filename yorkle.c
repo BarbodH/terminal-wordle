@@ -269,8 +269,22 @@ void print_attempt_result(const char attempt[], const letter_result_t result[]) 
    the file.
  */
 int save_stats(player_stats_t *stats, unsigned int num_attempts) {
+  FILE *fh = fopen(STATS_FILENAME, "w");
 
-  // YOUR CODE HERE
+  if (fh == NULL) return 0;
+
+  if (num_attempts > MAX_NUM_ATTEMPTS) {
+    stats->num_missed_words++;
+    return 1;
+  }
+
+  stats->wins_per_num_attempts[num_attempts-1]++;
+  for (int i = 0; i < MAX_NUM_ATTEMPTS; i++) {
+    fscanf(fh, "%d ", stats->wins_per_num_attempts[i]);
+  }
+
+  fclose(fh);
+  return 1;
 }
 
 /**
