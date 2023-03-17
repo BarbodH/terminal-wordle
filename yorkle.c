@@ -173,8 +173,16 @@ int read_attempt(unsigned int num_attempt, char attempt[]) {
    to the list of accepted words, or zero otherwise.
  */
 int attempt_is_valid(const valid_word_list_t *valid_words, const char attempt[]) {
+  int length = sizeof(valid_words->words) / sizeof(valid_words->words[0]);
 
-  // YOUR CODE HERE
+  for (int i = 0; i < length; i++) {
+    if (strcmp(valid_words->words[i], attempt) == 0) {
+      return 1;
+    }
+  }
+
+  fprintf(stderr, "'%s' is not a valid word.\n", attempt);
+  return 0;
 }
 
 /**
@@ -284,6 +292,25 @@ Guess distribution:
    @param stats struct containing the player stats.
  */
 void print_stats(const player_stats_t *stats) {
+  int wins = 0;
+  int size = sizeof(stats->wins_per_num_attempts) / sizeof(stats->wins_per_num_attempts[0]);
 
-  // YOUR CODE HERE
+  for (int i = 0; i < size; i++) {
+    wins += stats->wins_per_num_attempts[i];
+  }
+
+  int games = wins + stats->num_missed_words;
+  printf("Played: %d\n", games);
+  double winRate = 100 * (double) wins / games;
+  printf("Win %%: %.1lf%%\n\n", winRate);
+  printf("Guess distribution:\n");
+
+  for (int i = 0; i < size; i++) {
+    printf("%d: ", i+1);
+    for (int j = 1; j <= stats->wins_per_num_attempts[i]; j++) {
+      if (j == stats->wins_per_num_attempts[i]) printf("* ");
+      else printf("*");
+    }
+    printf("%d\n", stats->wins_per_num_attempts[i]);
+  }
 }
