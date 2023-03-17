@@ -173,9 +173,12 @@ int read_attempt(unsigned int num_attempt, char attempt[]) {
    to the list of accepted words, or zero otherwise.
  */
 int attempt_is_valid(const valid_word_list_t *valid_words, const char attempt[]) {
-  int length = sizeof(valid_words->words) / sizeof(valid_words->words[0]);
+  if (strlen(attempt) != WORD_SIZE) {
+    fprintf(stderr, "'%s' is not a valid word.\n", attempt);
+    return 0;
+  }
 
-  for (int i = 0; i < length; i++) {
+  for (int i = 0; i < valid_words->num_words; i++) {
     if (strcmp(valid_words->words[i], attempt) == 0) {
       return 1;
     }
@@ -230,8 +233,7 @@ int attempt_is_valid(const valid_word_list_t *valid_words, const char attempt[])
    return value.
  */
 int compare_result(const char todays_answer[], const char attempt[], letter_result_t result[]) {
-
-  // YOUR CODE HERE
+  
 }
 
 /**
@@ -249,8 +251,7 @@ int compare_result(const char todays_answer[], const char attempt[], letter_resu
    `compare_result`.
  */
 void print_attempt_result(const char attempt[], const letter_result_t result[]) {
-
-  // YOUR CODE HERE
+  printf("Result: LETTER_");
 }
 
 /**
@@ -269,14 +270,13 @@ void print_attempt_result(const char attempt[], const letter_result_t result[]) 
    the file.
  */
 int save_stats(player_stats_t *stats, unsigned int num_attempts) {
-  FILE *fh = fopen(STATS_FILENAME, "w");
-
-  if (fh == NULL) return 0;
-
   if (num_attempts > MAX_NUM_ATTEMPTS) {
     stats->num_missed_words++;
     return 1;
   }
+
+  FILE *fh = fopen(STATS_FILENAME, "w");
+  if (fh == NULL) return 0;
 
   stats->wins_per_num_attempts[num_attempts-1]++;
   for (int i = 0; i < MAX_NUM_ATTEMPTS; i++) {
@@ -315,7 +315,7 @@ void print_stats(const player_stats_t *stats) {
 
   int games = wins + stats->num_missed_words;
   printf("Played: %d\n", games);
-  double winRate = 100 * (double) wins / games;
+  double winRate = 100.0 * wins / games;
   printf("Win %%: %.1lf%%\n\n", winRate);
   printf("Guess distribution:\n");
 
