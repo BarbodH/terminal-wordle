@@ -280,9 +280,9 @@ int save_stats(player_stats_t *stats, unsigned int num_attempts) {
   }
 
   for (int i = 0; i < MAX_NUM_ATTEMPTS; i++) {
-    fscanf(fh, "%d ", stats->wins_per_num_attempts[i]);
+    fscanf(fh, "%u ", stats->wins_per_num_attempts[i]);
   }
-  fscanf(fh, "%d\n", stats->num_missed_words);
+  fscanf(fh, "%u\n", stats->num_missed_words);
 
   fclose(fh);
   return 1;
