@@ -270,18 +270,19 @@ void print_attempt_result(const char attempt[], const letter_result_t result[]) 
    the file.
  */
 int save_stats(player_stats_t *stats, unsigned int num_attempts) {
-  if (num_attempts > MAX_NUM_ATTEMPTS) {
-    stats->num_missed_words++;
-    return 1;
-  }
-
   FILE *fh = fopen(STATS_FILENAME, "w");
   if (fh == NULL) return 0;
 
-  stats->wins_per_num_attempts[num_attempts-1]++;
+  if (num_attempts > MAX_NUM_ATTEMPTS) {
+    stats->num_missed_words++;
+  } else {
+    stats->wins_per_num_attempts[num_attempts-1]++;
+  }
+
   for (int i = 0; i < MAX_NUM_ATTEMPTS; i++) {
     fscanf(fh, "%d ", stats->wins_per_num_attempts[i]);
   }
+  fscanf(fh, "%d\n", stats->num_missed_words);
 
   fclose(fh);
   return 1;
