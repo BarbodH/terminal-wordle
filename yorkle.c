@@ -279,7 +279,15 @@ int compare_result(const char todays_answer[], const char attempt[], letter_resu
    `compare_result`.
  */
 void print_attempt_result(const char attempt[], const letter_result_t result[]) {
-  printf("Result: LETTER_");
+  printf("Result: ");
+
+  for (int i = 0; i < strlen(attempt); i++) {
+    if (result[i] == 0) printf(LETTER_FORMAT_INCORRECT, attempt[i]);
+    else if (result[i] == 1) printf(LETTER_FORMAT_WRONG_PLACE, attempt[i]);
+    else printf(LETTER_FORMAT_IN_PLACE, attempt[i]);
+  }
+  
+  printf("\n");
 }
 
 /**
@@ -298,18 +306,18 @@ void print_attempt_result(const char attempt[], const letter_result_t result[]) 
    the file.
  */
 int save_stats(player_stats_t *stats, unsigned int num_attempts) {
-  FILE *fh = fopen(STATS_FILENAME, "w");
-  if (fh == NULL) return 0;
-
   if (num_attempts > MAX_NUM_ATTEMPTS) {
     stats->num_missed_words++;
   } else {
     stats->wins_per_num_attempts[num_attempts-1]++;
   }
 
+  FILE *fh = fopen(STATS_FILENAME, "w");
+
   for (int i = 0; i < MAX_NUM_ATTEMPTS; i++) {
     fprintf(fh, "%u ", stats->wins_per_num_attempts[i]);
   }
+
   fprintf(fh, "%u\n", stats->num_missed_words);
 
   fclose(fh);
