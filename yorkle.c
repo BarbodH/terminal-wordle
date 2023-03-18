@@ -233,7 +233,35 @@ int attempt_is_valid(const valid_word_list_t *valid_words, const char attempt[])
    return value.
  */
 int compare_result(const char todays_answer[], const char attempt[], letter_result_t result[]) {
-  
+  int out = 1; // non-zero value indicates correct attempt and 0 otherwise
+
+  // make a copy of todays_answer
+  char todays_answer_copy[WORD_SIZE];
+  for (int i = 0; i < WORD_SIZE; i++) {
+    todays_answer_copy[i] = todays_answer[i];
+  }
+
+  for (int i = 0; i < WORD_SIZE; i++) {
+    if (attempt[i] == todays_answer[i]) {
+      result[i] = LR_IN_PLACE;
+      todays_answer_copy[i] = '!';
+    } else {
+      out = 0;
+      result[i] = LR_INCORRECT;
+    }
+  }  
+
+  for (int i = 0; i < WORD_SIZE; i++) {
+    for (int j = 0; j < WORD_SIZE; j++) {
+      if (attempt[i] == todays_answer_copy[j] && result[i] != 2) {
+        result[i] = LR_WRONG_PLACE;
+        todays_answer_copy[j] = '!';
+        break;
+      }
+    }
+  }
+
+  return out;
 }
 
 /**
